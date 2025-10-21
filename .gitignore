@@ -1,0 +1,12 @@
+/.venv/
+/venv/
+.venv
+venv
+/.idea/
+/.idea
+.idea
+idea
+Connection/__pycache__
+Models/__pycache__
+Controllers/__pycache__
+Views/__pycache__
