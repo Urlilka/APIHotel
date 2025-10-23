@@ -1,7 +1,7 @@
 from tkinter import ttk, Tk
 from tkinter import *
 
-from re import fullmatch
+import re
 from requests import get # ответы для прилоджений
 
 
