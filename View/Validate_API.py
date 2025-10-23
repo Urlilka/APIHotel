@@ -3,6 +3,7 @@ from tkinter import *
 
 import re
 from requests import get # ответы для прилоджений
+from docx import Document
 
 
 
@@ -17,7 +18,7 @@ class Validate_API(Tk):
 
         # Окно
         self.title("Валидация Данных")
-        self.geometry("500x200")
+        self.geometry("550x160")
 
 
         # Первая строка
@@ -51,13 +52,13 @@ class Validate_API(Tk):
 
     def send_API(self, name):
         # Допусимые символы
-        patterns = r'^[а-яА-ЯёЁ]+\s[а-яА-ЯёЁ]+\s[а-яА-ЯёЁ]+&'
-        if self.name == "":
-            pass
-        if re.fullmatch(patterns,name): #Если в строке только разрешённые символы из patterns
+        patterns = r'^[а-яА-ЯёЁ]+\s[а-яА-ЯёЁ]+\s[а-яА-ЯёЁ]+$'
+        if re.fullmatch(patterns,self.name): #Если в строке только разрешённые символы из patterns
             self.validate_message["text"] = "ФИО не содержит запрещённые символы"
+            self.save_result(self.name,"Успешно", "Успешно")
         else:
             self.validate_message["text"] = "ФИО содержит запрещённые символы"
+            self.save_result(self.name,"Не успешно", "Не успешно")
 
 
     def get_API(self):
@@ -66,14 +67,15 @@ class Validate_API(Tk):
         self.data_value["text"] = self.name
 
 
-    # def save_result(self, name, result):
-    #     doc = Document(self.test_case_file)
-    #     row_calls = doc.tables[0].add_row().cells
-    #     row_calls[0].text = f"Проверка ФИО {self.data_value}"
-    #     row_calls[1].text = name
-    #     row_calls[2].text = result
-    #     for par in cell.paragraph:
-    #         pass
+    def save_result(self, name, revers_result, result):
+        self.document = "Docs/ТестКейс.docx"
+        doc = Document(self.document)
+        row_cell = doc.tables[0].add_row().cells
+        row_cell[0].text = name
+        row_cell[1].text = revers_result
+        row_cell[2].text = result
+
+        doc.save(self.document)
 
 
 
