@@ -55,10 +55,12 @@ class Validate_API(Tk):
         patterns = r'^[а-яА-ЯёЁ]+\s[а-яА-ЯёЁ]+\s[а-яА-ЯёЁ]+$'
         if re.fullmatch(patterns,self.name): #Если в строке только разрешённые символы из patterns
             self.validate_message["text"] = "ФИО не содержит запрещённые символы"
-            self.save_result(self.name,"Успешно", "Успешно")
+            waiting_result = self.clear_text(self.name)
+            self.save_result(self.name, waiting_result, "Успешно")
         else:
             self.validate_message["text"] = "ФИО содержит запрещённые символы"
-            self.save_result(self.name,"Не успешно", "Не успешно")
+            waiting_result = self.clear_text(self.name)
+            self.save_result(self.name, waiting_result, "Не успешно")
 
 
     def get_API(self):
@@ -67,18 +69,21 @@ class Validate_API(Tk):
         self.data_value["text"] = self.name
 
 
-    def save_result(self, name, revers_result, result):
+    def save_result(self, name, waiting_result, result):
         self.document = "Docs/ТестКейс.docx"
         doc = Document(self.document)
         row_cell = doc.tables[0].add_row().cells
-        row_cell[0].text = name
-        row_cell[1].text = revers_result
+        row_cell[0].text = f"Проверка на запрещённые символы:\n{name}"
+        row_cell[1].text = waiting_result
         row_cell[2].text = result
 
         doc.save(self.document)
 
 
+    def clear_text(self, name):
+        return re.sub(r'[^а-яА-ЯёЁ\s]',"",name)
 
-if __name__ == "__main__":
-    window = Validate_API()
-    window.mainloop()
+
+# if __name__ == "__main__":
+#     window = Validate_API()
+#     window.mainloop()
