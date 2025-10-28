@@ -8,6 +8,8 @@ from docx import Document
 
 
 class Validate_API(Tk):
+    """Окно проверки данных, получаемых из API
+    """
     def __init__(self):
         super().__init__()
         self.test_case_file = "ТестКейс.docx"
@@ -51,6 +53,11 @@ class Validate_API(Tk):
 
 
     def send_API(self, name):
+        """Проверяет полученное имя из "get_API()" И проверяет на запрещённые сиволы, вызывает и вносит данные в "save_result(name, waiting_result, result)"
+
+        Args:
+            name (str): Имя, полученное из "get_API()"
+        """
         # Допусимые символы
         patterns = r'^[а-яА-ЯёЁ]+\s[а-яА-ЯёЁ]+\s[а-яА-ЯёЁ]+$'
         if re.fullmatch(patterns,self.name): #Если в строке только разрешённые символы из patterns
@@ -64,12 +71,21 @@ class Validate_API(Tk):
 
 
     def get_API(self):
+        """Получает данные из API в виде списка{"key":"value"}, и записывает значение в переменную
+        """
         response = get(self.API_url,{"key":"value"})
         self.name = response.json()["value"]
         self.data_value["text"] = self.name
 
 
     def save_result(self, name, waiting_result, result):
+        """Вводит данные в "Docs/ТестКейс.docx"
+
+        Args:
+            name (str): Идёт в первую колонку таблицы
+            waiting_result (str): Идёт во вторую колонку таблицы
+            result (str): Идёт в третью колонку таблицы
+        """
         self.document = "Docs/ТестКейс.docx"
         doc = Document(self.document)
         row_cell = doc.tables[0].add_row().cells
@@ -81,6 +97,14 @@ class Validate_API(Tk):
 
 
     def clear_text(self, name):
+        """Очищает вводимые данные от запрещёных знаков
+
+        Args:
+            name (str): Вводимое имя, которое нужно очистить
+
+        Returns:
+            str: То же имя, но без запрещённых символов
+        """
         return re.sub(r'[^а-яА-ЯёЁ\s]',"",name)
 
 
